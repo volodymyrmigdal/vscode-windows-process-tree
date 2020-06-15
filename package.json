@@ -26,9 +26,9 @@
     "type": "git",
     "url": "git://github.com/volodymyrmigdal/vscode-windows-process-tree.git"
   },
-  "homepage": "https://github.com/Microsoft/vscode-windows-process-tree",
+  "homepage": "https://github.com/volodymyrmigdal/vscode-windows-process-tree",
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-windows-process-tree/issues"
+    "url": "https://github.com/volodymyrmigdal/vscode-windows-process-tree/issues"
   },
   "dependencies": {
     "nan": "^2.13.2"
