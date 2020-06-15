@@ -8,7 +8,17 @@
     "test": "mocha lib/test.js",
     "prepublish": "tsc",
     "watch": "tsc -w",
-    "lint": "tslint lib/*.ts typings/*.ts *.ts"
+    "lint": "tslint lib/*.ts typings/*.ts *.ts",
+    "node-pre-gyp-install": "node-pre-gyp install --update-binary --fallback-to-build",
+    "node-pre-gyp-build": "node-pre-gyp configure && node-pre-gyp rebuild",
+    "node-pre-gyp-package": "node-pre-gyp package",
+    "node-pre-gyp-github-release": "node-pre-gyp-github publish --release"
+  },
+  "binary": {
+    "module_name": "windows_process_tree",
+    "module_path": "./binding/",
+    "host": "https://github.com/volodymyrmigdal/vscode-windows-process-tree/releases/download/",
+    "remote_path": "{version}"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
@@ -28,9 +38,9 @@
     "typescript": "2.7.2",
     "tslint": "5.9.1",
     "@types/node": "9.4.7",
-    "@types/mocha": "2.2.48"
-  },
-  "os": [
-    "win32"
-  ]
+    "@types/mocha": "2.2.48",
+    "node-gyp": "5.1.1",
+    "node-pre-gyp": "0.14.0",
+    "node-pre-gyp-github": "1.4.3"
+  }
 }
