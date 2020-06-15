@@ -16,7 +16,7 @@
     "binding.gyp",
     "typings",
     "src",
-    "lib"
+    "lib/index.js"
   ],
   "binary": {
     "module_name": "windows_process_tree",
