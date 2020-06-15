@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as child_process from 'child_process';
 import { getProcessTree, getProcessList, getProcessCpuUsage, ProcessDataFlag, buildProcessTree, filterProcessList } from './index';
 
-const native = require('../build/Release/windows_process_tree.node');
+const native = require('../binding/windows_process_tree.node');
 
 function pollUntil(makePromise: () => Promise<boolean>, cb: () => void, interval: number, timeout: number): void {
   makePromise().then((success) => {
