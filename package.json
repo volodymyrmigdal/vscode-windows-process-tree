@@ -1,6 +1,6 @@
 {
   "name": "wwindows-process-tree",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Fetch a Windows process tree fast",
   "main": "lib/index.js",
   "types": "typings/windows-process-tree.d.ts",
@@ -12,7 +12,12 @@
     "node-pre-gyp-package": "node-pre-gyp package",
     "node-pre-gyp-github-release": "node-pre-gyp-github publish --release"
   },
-  "files": [ "binding.gyp", "typings", "src", "lib" ],
+  "files": [
+    "binding.gyp",
+    "typings",
+    "src",
+    "lib"
+  ],
   "binary": {
     "module_name": "windows_process_tree",
     "module_path": "./binding/",
@@ -32,7 +37,7 @@
   "dependencies": {
     "nan": "^2.13.2"
   },
-  "gypfile" : false,
+  "gypfile": false,
   "devDependencies": {
     "mocha": "^3.5.0",
     "typescript": "2.7.2",
@@ -43,5 +48,7 @@
     "node-pre-gyp": "0.14.0",
     "node-pre-gyp-github": "1.4.3"
   },
-  "os": [ "win32" ]
+  "os": [
+    "win32"
+  ]
 }
