@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/volodymyrmigdal/vscode-windows-process-tree.git"
+    "url": "https://github.com/volodymyrmigdal/vscode-windows-process-tree.git"
   },
   "homepage": "https://github.com/volodymyrmigdal/vscode-windows-process-tree",
   "bugs": {
