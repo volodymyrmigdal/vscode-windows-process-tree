@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-const native = require('../build/Release/windows_process_tree.node');
+const native = require('../binding/windows_process_tree.node');
 import { IProcessInfo, IProcessTreeNode, IProcessCpuInfo } from 'windows-process-tree';
 
 export enum ProcessDataFlag {
