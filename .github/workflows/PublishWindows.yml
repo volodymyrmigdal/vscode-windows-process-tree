@@ -1,31 +1,20 @@
 
-name : pr
+name : publish
 
 on :
-  pull_request :
-    branches : [ master ]
-  pull_request_review :
+  push :
     branches : [ master ]
 
 jobs :
 
-  Cancel:
-    name : 'Cancel Previous Runs'
-    runs-on : ubuntu-latest
-    timeout-minutes : 1
-    steps :
-      - uses : styfle/cancel-workflow-action@0.4.0
-        with :
-          access_token : ${{ github.token }}
-          # workflow_id : ${{ github.workflow }}
-
-  Fast :
+  Full :
+    if : "startsWith( github.event.head_commit.message, 'version' )"
     runs-on : ${{ matrix.os }}
     strategy :
       fail-fast : false
       matrix :
-        os : [ ubuntu-latest, windows-latest, macos-latest ]
-        node-version : [ 14.x ]
+        os : [ windows-latest ]
+        node-version : [ 10.x, 12.x, 13.x, 14.x, 15.x ]
     steps :
     - run : git config --global core.autocrlf input
     - run : git config --global user.email "testing@testing.com"
@@ -40,4 +29,3 @@ jobs :
       run : npm test
       env :
         WTOOLS_BOT_TOKEN : ${{ secrets.WTOOLS_BOT_TOKEN }}
-
