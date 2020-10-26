@@ -1301,6 +1301,4 @@ module:
       ../.im.will.yml:
         hash: 1423ca8321bd839ae80a9fc67eadf558
         size: 5880
-      wProcessTreeWindows.out.will.yml:
-        hash: afe8440599b843da126ab256e2687d69
-        size: 32838
+      wProcessTreeWindows.out.will.yml: *ref_0
