@@ -1,5 +1,5 @@
 {
-  "name": "wwindows-process-tree",
+  "name": "w.process.tree.windows",
   "version": "0.3.1",
   "description": "Fetch a Windows process tree fast",
   "main": "lib/index.js",
@@ -21,18 +21,18 @@
   "binary": {
     "module_name": "windows_process_tree",
     "module_path": "./binding/",
-    "host": "https://github.com/volodymyrmigdal/vscode-windows-process-tree/releases/download/",
+    "host": "https://github.com/Wandalen/wProcessTreeWindows/releases/download/",
     "remote_path": "{version}"
   },
   "author": "Microsoft Corporation",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/volodymyrmigdal/vscode-windows-process-tree.git"
+    "url": "https://github.com/Wandalen/wProcessTreeWindows.git"
   },
-  "homepage": "https://github.com/volodymyrmigdal/vscode-windows-process-tree",
+  "homepage": "https://github.com/Wandalen/wProcessTreeWindows",
   "bugs": {
-    "url": "https://github.com/volodymyrmigdal/vscode-windows-process-tree/issues"
+    "url": "https://github.com/Wandalen/wProcessTreeWindows/issues"
   },
   "dependencies": {
     "nan": "^2.13.2",
