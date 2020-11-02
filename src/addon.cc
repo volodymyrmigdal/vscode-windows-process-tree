@@ -53,9 +53,38 @@ void GetProcessCpuUsage(const Nan::FunctionCallbackInfo<v8::Value>& args) {
   Nan::AsyncQueueWorker(worker);
 }
 
+void GetProcessCreationTime(const Nan::FunctionCallbackInfo<v8::Value>& args) {
+
+  v8::Isolate* isolate = args.GetIsolate();
+
+  if (args.Length() < 1) {
+    Nan::ThrowTypeError("GetProcessCreationTime expects single argument.");
+    return;
+  }
+
+  if (!args[0]->IsNumber()) {
+    Nan::ThrowTypeError("The first argument of GetProcessCreationTime, pid, must be a number.");
+    return;
+  }
+
+  DWORD pid =(DWORD)(Nan::To<int32_t>(args[0]).FromJust());
+  ULONGLONG creationTime = processCreationTimeGet( pid );
+  
+  if( creationTime ) {
+    auto result = v8::BigInt::NewFromUnsigned( isolate, creationTime );
+    args.GetReturnValue().Set( result );
+  }
+  else
+  {
+    args.GetReturnValue().Set( v8::Null( isolate ) );
+  }
+  
+}
+
 void Init(v8::Local<v8::Object> exports) {
   Nan::Export(exports, "getProcessList", GetProcessList);
   Nan::Export(exports, "getProcessCpuUsage", GetProcessCpuUsage);
+  Nan::Export(exports, "getProcessCreationTime", GetProcessCreationTime);
 }
 
 NODE_MODULE(hello, Init)
