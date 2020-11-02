@@ -68,14 +68,17 @@ void GetProcessCreationTime(const Nan::FunctionCallbackInfo<v8::Value>& args) {
   }
 
   DWORD pid =(DWORD)(Nan::To<int32_t>(args[0]).FromJust());
-  ULONGLONG creationTime = processCreationTimeGet( pid );
+  bool err = false;
+  ULONGLONG creationTime = processCreationTimeGet( pid, err );
   
-  if( creationTime ) {
+  if( err ) {
+    Nan::ThrowError( Nan::ErrnoException( errno, NULL, "Failed to get process creation time. Error code:" ) );
+  }
+  else if( creationTime ) {
     auto result = v8::BigInt::NewFromUnsigned( isolate, creationTime );
     args.GetReturnValue().Set( result );
   }
-  else
-  {
+  else {
     args.GetReturnValue().Set( v8::Null( isolate ) );
   }
   

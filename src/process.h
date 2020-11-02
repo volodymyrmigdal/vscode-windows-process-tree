@@ -36,6 +36,6 @@ void GetProcessMemoryUsage(ProcessInfo process_info[1024], uint32_t* process_cou
 
 void GetCpuUsage(Cpu cpu_info[1024], uint32_t* process_count, BOOL first_run);
 
-ULONGLONG processCreationTimeGet( DWORD pid );
+ULONGLONG processCreationTimeGet( DWORD pid, bool &err );
 
 #endif  // SRC_PROCESS_H_

@@ -9,6 +9,7 @@
 #include <tlhelp32.h>
 #include <psapi.h>
 #include <limits>
+#include <errno.h>
 
 void GetRawProcessList(ProcessInfo process_info[1024], uint32_t* process_count, DWORD* process_data_flags) {
   *process_count = 0;
@@ -102,7 +103,7 @@ void GetCpuUsage(Cpu* cpu_info, uint32_t* process_index, BOOL first_pass) {
   CloseHandle(hProcess);
 }
 
-ULONGLONG processCreationTimeGet(DWORD pid) {
+ULONGLONG processCreationTimeGet(DWORD pid, bool &err ) {
   HANDLE hProcess;
 
   hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pid);
@@ -112,8 +113,14 @@ ULONGLONG processCreationTimeGet(DWORD pid) {
   }
 
   FILETIME creationTime, exitTime, kernelTime, userTime;
-  GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime, &userTime);
-  ULONGLONG ctime = ULARGE_INTEGER{ creationTime.dwLowDateTime, creationTime.dwHighDateTime }.QuadPart;
+  ULONGLONG ctime = 0;
+  if( GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime, &userTime) ) {
+   ctime = ULARGE_INTEGER{ creationTime.dwLowDateTime, creationTime.dwHighDateTime }.QuadPart;
+  }
+  else {
+    err = true;
+    errno = GetLastError();
+  }
     
   CloseHandle(hProcess);
   
