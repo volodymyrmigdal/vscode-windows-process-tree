@@ -101,3 +101,21 @@ void GetCpuUsage(Cpu* cpu_info, uint32_t* process_index, BOOL first_pass) {
 
   CloseHandle(hProcess);
 }
+
+ULONGLONG processCreationTimeGet(DWORD pid) {
+  HANDLE hProcess;
+
+  hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, pid);
+
+  if (hProcess == NULL) {
+    return 0;
+  }
+
+  FILETIME creationTime, exitTime, kernelTime, userTime;
+  GetProcessTimes(hProcess, &creationTime, &exitTime, &kernelTime, &userTime);
+  ULONGLONG ctime = ULARGE_INTEGER{ creationTime.dwLowDateTime, creationTime.dwHighDateTime }.QuadPart;
+    
+  CloseHandle(hProcess);
+  
+  return ctime;
+}
