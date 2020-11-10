@@ -7,13 +7,13 @@
   "scripts" :
   {
     "test" : "mocha lib/test.js",
-    "install" : "node-pre-gyp install --update-binary --fallback-to-build",
+    "install" : "node step/install.ss",
     "node-pre-gyp-install" : "node-pre-gyp install --update-binary --fallback-to-build",
     "node-pre-gyp-build" : "node-pre-gyp configure && node-pre-gyp rebuild",
     "node-pre-gyp-package" : "node-pre-gyp package",
     "node-pre-gyp-github-release" : "node-pre-gyp-github publish --release"
   },
-  "files" : [ "binding.gyp", "typings", "src", "lib/index.js" ],
+  "files" : [ "binding.gyp", "typings", "src", "lib/index.js", "step" ],
   "binary" :
   {
     "module_name" : "windows_process_tree",
