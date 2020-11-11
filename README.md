@@ -1,6 +1,6 @@
-# windows-process-tree
+# wProcessTreeWindows
 
-[![status](https://github.com/Wandalen/wProcessTreeWindows/workflows/publish/badge.svg)](https://github.com/Wandalen/wProcessTreeWindows/actions?query=workflow%3Apublish)
+[![status](https://github.com/Wandalen/wProcessTreeWindows/workflows/publish/badge.svg)](https://github.com/Wandalen/wProcessTreeWindows/actions?query=workflow%3Apublish)[![NPM version](http://img.shields.io/npm/v/w.process.tree.windows.svg)](https://www.npmjs.org/package/w.process.tree.windows)
 
 A Node.js library that enables quickly fetching process tree information for a particular process ID on Windows.
 
