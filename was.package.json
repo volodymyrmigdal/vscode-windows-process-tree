@@ -13,7 +13,7 @@
     "node-pre-gyp-package" : "node-pre-gyp package",
     "node-pre-gyp-github-release" : "node-pre-gyp-github publish --release"
   },
-  "files" : [ "binding.gyp", "typings", "src", "lib/index.js", "step" ],
+  "files" : [ "binding.gyp", "typings", "src", "lib/index.js", "step", "QuickTest.ss" ],
   "binary" :
   {
     "module_name" : "windows_process_tree",
