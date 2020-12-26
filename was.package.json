@@ -7,6 +7,7 @@
   "scripts" :
   {
     "test" : "mocha lib/test.js",
+    "test2" : "wtest .run 'test/**' rapidity:-1 verbosity:5 fails:5 s:0",
     "install" : "node step/Install.ss",
     "node-pre-gyp-install" : "node-pre-gyp install --update-binary --fallback-to-build",
     "node-pre-gyp-build" : "node-pre-gyp configure && node-pre-gyp rebuild",
@@ -43,7 +44,8 @@
     "@types/node" : "9.4.7",
     "@types/mocha" : "2.2.48",
     "node-gyp" : "5.1.1",
-    "node-pre-gyp-github" : "1.4.3"
+    "node-pre-gyp-github" : "1.4.3",
+    "wTesting" : "alpha"
   },
   "os" : [ "win32" ]
 }

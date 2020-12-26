@@ -7,6 +7,7 @@
   "scripts" :
   {
     "test" : "mocha lib/test.js",
+    "test2" : "wtest .run 'test/**' rapidity:-1 verbosity:5 fails:5 s:0",
     "install" : "node step/Install.ss",
     "node-pre-gyp-install" : "node-pre-gyp install --update-binary --fallback-to-build",
     "node-pre-gyp-build" : "node-pre-gyp configure && node-pre-gyp rebuild",
