@@ -7,7 +7,7 @@ let ProcessTreeWindows;
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( './../../../wtools/Tools.s' );
+  let _ = require( 'wTools' );
   _.include( 'wTesting' );
   _.include( 'wFiles' );
   _.include( 'wProcess' );
