@@ -11,7 +11,7 @@
 
 class GetProcessesWorker : public Nan::AsyncWorker {
  public:
-  GetProcessesWorker(Nan::Callback* callback, DWORD* process_data_flags);
+  GetProcessesWorker( DWORD* rootPid, Nan::Callback* callback, DWORD* process_data_flags );
   ~GetProcessesWorker();
 
   void Execute();
@@ -20,6 +20,7 @@ class GetProcessesWorker : public Nan::AsyncWorker {
   ProcessInfo* process_info;
   uint32_t* process_count;
   DWORD* process_data_flags;
+  DWORD* rootPid;
 
 };
 

@@ -6,9 +6,11 @@
 #include "process_worker.h"
 
 GetProcessesWorker::GetProcessesWorker(
+    DWORD* rootPid,
     Nan::Callback* callback,
-    DWORD* process_data_flags) 
-      : AsyncWorker(callback),
+    DWORD* process_data_flags)
+      : rootPid(rootPid),
+        AsyncWorker(callback),
         process_data_flags(process_data_flags) {
     process_info = new ProcessInfo[1024];
     process_count = new uint32_t;
@@ -18,10 +20,11 @@ GetProcessesWorker::~GetProcessesWorker() {
   delete[] process_info;
   delete process_count;
   delete process_data_flags;
+  delete rootPid;
 }
 
 void GetProcessesWorker::Execute() {
-  GetRawProcessList(process_info, process_count, process_data_flags);
+  GetRawProcessList( rootPid, process_info, process_count, process_data_flags);
 }
 
 void GetProcessesWorker::HandleOKCallback() {

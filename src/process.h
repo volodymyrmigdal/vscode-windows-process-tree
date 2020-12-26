@@ -8,6 +8,9 @@
 
 #include <nan.h>
 #include <windows.h>
+#include <psapi.h>
+#include <tlhelp32.h>
+#include <limits>
 
 struct Cpu {
   DWORD pid;
@@ -22,6 +25,7 @@ struct ProcessInfo {
   DWORD ppid;
   DWORD memory; // Reported in bytes
   TCHAR commandLine[4096];
+  bool ppidChanged;
 };
 
 enum ProcessDataFlags {
@@ -30,12 +34,14 @@ enum ProcessDataFlags {
   COMMANDLINE = 2
 };
 
-void GetRawProcessList(ProcessInfo process_info[1024], uint32_t* process_count, DWORD* flags);
+void GetRawProcessList( DWORD* rootPid, ProcessInfo process_info[1024], uint32_t* process_count, DWORD* flags);
 
-void GetProcessMemoryUsage(ProcessInfo process_info[1024], uint32_t* process_count);
+void GetProcessMemoryUsage(ProcessInfo *process_info );
 
 void GetCpuUsage(Cpu cpu_info[1024], uint32_t* process_count, BOOL first_run);
 
 ULONGLONG processCreationTimeGet( DWORD pid, bool &err );
+
+bool processPpidChanged( DWORD pid, DWORD ppid );
 
 #endif  // SRC_PROCESS_H_

@@ -10,40 +10,85 @@
 #include <psapi.h>
 #include <limits>
 #include <errno.h>
+#include <set>
+#include <iostream>
+#include <algorithm>
+#include <functional>
+#include <unordered_map>
 
-void GetRawProcessList(ProcessInfo process_info[1024], uint32_t* process_count, DWORD* process_data_flags) {
+void GetRawProcessList( DWORD* rootPid, ProcessInfo process_info[1024], uint32_t* process_count, DWORD* process_data_flags) {
   *process_count = 0;
+
+  // std::set<DWORD> invalid;
+
+  std::unordered_multimap <DWORD,DWORD > parentToChildrenMap;
+  std::unordered_map <DWORD, DWORD > childrenToParentMap;
+  std::unordered_map <DWORD, std::reference_wrapper< ProcessInfo > > pidToProcessInfo;
+
+  /*
+    Create set for invalid processes
+    Check if process is valid
+    Put invalid process into the list
+    Invalidate process if its ppid exists in the list
+
+    Invalid:
+      - If ppid was changed
+      - If ppid exists in the list of invalid processes
+  */
 
   // Fetch the PID and PPIDs
   PROCESSENTRY32 process_entry = { 0 };
   DWORD parent_pid = 0;
   HANDLE snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   process_entry.dwSize = sizeof(PROCESSENTRY32);
-  if (Process32First(snapshot_handle, &process_entry)) {
-    do {
-      if (process_entry.th32ProcessID != 0) {
-        process_info[*process_count].pid = process_entry.th32ProcessID;
-        process_info[*process_count].ppid = process_entry.th32ParentProcessID;
+  if (Process32First(snapshot_handle, &process_entry))
+  {
+    do
+    {
+      if (process_entry.th32ProcessID != 0)
+      {
+        auto pinfo = new ProcessInfo();
+
+        pinfo->ppidChanged = processPpidChanged( process_entry.th32ProcessID, process_entry.th32ParentProcessID );
+        pinfo->pid = process_entry.th32ProcessID;
+        pinfo->ppid = process_entry.th32ParentProcessID;
 
         if (MEMORY & *process_data_flags) {
-          GetProcessMemoryUsage(process_info, process_count);
+          GetProcessMemoryUsage( pinfo );
         }
 
         if (COMMANDLINE & *process_data_flags) {
-          GetProcessCommandLine(process_info, process_count);
+          GetProcessCommandLine( pinfo );
         }
 
-        strcpy(process_info[*process_count].name, process_entry.szExeFile);
+        strcpy( pinfo->name, process_entry.szExeFile);
+
+        pidToProcessInfo.insert( std::make_pair( process_entry.th32ProcessID, std::ref( *pinfo ) ) );
+        childrenToParentMap.insert( std::make_pair( process_entry.th32ProcessID, process_entry.th32ParentProcessID ) );
+        parentToChildrenMap.insert( std::make_pair( process_entry.th32ParentProcessID, process_entry.th32ProcessID ) );
+
+        // auto a = pidToProcessInfo.at( process_entry.th32ProcessID );
+        // std::cout << a.get().pid << std::endl;
+
         (*process_count)++;
       }
     } while (*process_count < 1024 && Process32Next(snapshot_handle, &process_entry));
+
   }
 
   CloseHandle(snapshot_handle);
+
+  std::unordered_map<DWORD, std::reference_wrapper< ProcessInfo >>::iterator it;
+  uint32_t c = 0;
+  for (it = pidToProcessInfo.begin(); it != pidToProcessInfo.end(); it++, c++)
+  {
+    process_info[ c ] = it->second.get();
+  }
+
 }
 
-void GetProcessMemoryUsage(ProcessInfo process_info[1024], uint32_t* process_count) {
-  DWORD pid = process_info[*process_count].pid;
+void GetProcessMemoryUsage( ProcessInfo *process_info ) {
+  DWORD pid = process_info->pid;
   HANDLE hProcess;
   PROCESS_MEMORY_COUNTERS pmc;
 
@@ -54,7 +99,7 @@ void GetProcessMemoryUsage(ProcessInfo process_info[1024], uint32_t* process_cou
   }
 
   if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc))) {
-    process_info[*process_count].memory = (DWORD)pmc.WorkingSetSize;
+    process_info->memory = (DWORD)pmc.WorkingSetSize;
   }
 }
 
@@ -121,8 +166,39 @@ ULONGLONG processCreationTimeGet(DWORD pid, bool &err ) {
     err = true;
     errno = GetLastError();
   }
-    
+
   CloseHandle(hProcess);
-  
+
   return ctime;
+}
+
+bool processPpidChanged( DWORD pid, DWORD ppid )
+{
+  uint32_t process_count = 0;
+  PROCESSENTRY32 process_entry = { 0 };
+  HANDLE snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, pid);
+
+  if( snapshot_handle == INVALID_HANDLE_VALUE)
+  return false;
+
+  process_entry.dwSize = sizeof(PROCESSENTRY32);
+  if (Process32First(snapshot_handle, &process_entry))
+  {
+    do
+    {
+      if (process_entry.th32ProcessID != 0 )
+      {
+        if (process_entry.th32ProcessID == pid )
+        {
+          return process_entry.th32ParentProcessID == ppid;
+        }
+
+        process_count++;
+      }
+    } while (process_count < 1024 && Process32Next(snapshot_handle, &process_entry));
+  }
+
+  CloseHandle(snapshot_handle);
+
+  return false;
 }

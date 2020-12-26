@@ -8,25 +8,33 @@
 #include "process_worker.h"
 
 void GetProcessList(const Nan::FunctionCallbackInfo<v8::Value>& args) {
-  if (args.Length() < 2) {
-    Nan::ThrowTypeError("GetProcessList expects two arguments.");
+  if (args.Length() < 3) {
+    Nan::ThrowTypeError("GetProcessList expects three arguments.");
     return;
   }
 
-  if (!args[0]->IsFunction()) {
-    Nan::ThrowTypeError("The first argument of GetProcessList, callback, must be a function.");
+
+  if (!args[0]->IsNumber()) {
+    Nan::ThrowTypeError("The first argument of GetProcessList, rootPid, must be a number.");
     return;
   }
 
-  if (!args[1]->IsNumber()) {
-    Nan::ThrowTypeError("The second argument of GetProcessList, flags, must be a number.");
+  if (!args[1]->IsFunction()) {
+    Nan::ThrowTypeError("The second argument of GetProcessList, callback, must be a function.");
     return;
   }
 
-  Nan::Callback *callback = new Nan::Callback(v8::Local<v8::Function>::Cast(args[0]));
+  if (!args[2]->IsNumber()) {
+    Nan::ThrowTypeError("The third argument of GetProcessList, flags, must be a number.");
+    return;
+  }
+
+  DWORD* rootPid = new DWORD;
+  *rootPid = (DWORD)(Nan::To<int32_t>(args[0]).FromJust());
+  Nan::Callback *callback = new Nan::Callback(v8::Local<v8::Function>::Cast(args[1]));
   DWORD* flags = new DWORD;
-  *flags = (DWORD)(Nan::To<int32_t>(args[1]).FromJust());
-  GetProcessesWorker *worker = new GetProcessesWorker(callback, flags);
+  *flags = (DWORD)(Nan::To<int32_t>(args[2]).FromJust());
+  GetProcessesWorker *worker = new GetProcessesWorker( rootPid, callback, flags);
   Nan::AsyncQueueWorker(worker);
 }
 
@@ -70,7 +78,7 @@ void GetProcessCreationTime(const Nan::FunctionCallbackInfo<v8::Value>& args) {
   DWORD pid =(DWORD)(Nan::To<int32_t>(args[0]).FromJust());
   bool err = false;
   ULONGLONG creationTime = processCreationTimeGet( pid, err );
-  
+
   if( err ) {
     Nan::ThrowError( Nan::ErrnoException( errno, NULL, "Failed to get process creation time. Error code:" ) );
   }
@@ -81,7 +89,7 @@ void GetProcessCreationTime(const Nan::FunctionCallbackInfo<v8::Value>& args) {
   else {
     args.GetReturnValue().Set( v8::Null( isolate ) );
   }
-  
+
 }
 
 void Init(v8::Local<v8::Object> exports) {

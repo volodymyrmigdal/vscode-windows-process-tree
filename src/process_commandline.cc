@@ -9,7 +9,7 @@
 #include <winternl.h>
 #include <psapi.h>
 
-bool GetProcessCommandLine(ProcessInfo process_info[1024], uint32_t *process_count) {
+bool GetProcessCommandLine(ProcessInfo *process_info ) {
   pfnNtQueryInformationProcess gNtQueryInformationProcess = (pfnNtQueryInformationProcess)GetProcAddress(
       GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
 
@@ -18,7 +18,7 @@ bool GetProcessCommandLine(ProcessInfo process_info[1024], uint32_t *process_cou
   RTL_USER_PROCESS_PARAMETERS process_parameters = {NULL};
 
   // Get process handle
-  DWORD pid = process_info[*process_count].pid;
+  DWORD pid = process_info->pid;
   HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
   if (hProcess == INVALID_HANDLE_VALUE) {
     return FALSE;
@@ -54,13 +54,13 @@ bool GetProcessCommandLine(ProcessInfo process_info[1024], uint32_t *process_cou
             if (ReadProcessMemory(hProcess, process_parameters.CommandLine.Buffer, buffer, process_parameters.CommandLine.Length, &bytes_read)) {
 
               // Copy only as much as will fit in the commandLine property
-              DWORD buffer_size = process_parameters.CommandLine.Length >= sizeof(process_info[*process_count].commandLine)
-                                     ? sizeof(process_info[*process_count].commandLine) - sizeof(TCHAR)
+              DWORD buffer_size = process_parameters.CommandLine.Length >= sizeof(process_info->commandLine)
+                                     ? sizeof(process_info->commandLine) - sizeof(TCHAR)
                                      : process_parameters.CommandLine.Length;
 
               WideCharToMultiByte(CP_ACP, 0, buffer,
                                   (int)(buffer_size / sizeof(WCHAR)),
-                                  process_info[*process_count].commandLine, sizeof(process_info[*process_count].commandLine),
+                                  process_info->commandLine, sizeof(process_info->commandLine),
                                   NULL, NULL);
 
               CloseHandle(hProcess);
