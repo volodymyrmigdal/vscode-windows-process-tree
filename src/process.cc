@@ -121,8 +121,8 @@ ULONGLONG processCreationTimeGet(DWORD pid, bool &err ) {
     err = true;
     errno = GetLastError();
   }
-    
+
   CloseHandle(hProcess);
-  
+
   return ctime;
 }
