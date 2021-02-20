@@ -26,10 +26,15 @@ jobs :
       matrix :
         os : [ windows-latest ]
         node-version : [ 14.x ]
+    env :
+      PRIVATE_WTOOLS_BOT_TOKEN : ${{ secrets.PRIVATE_WTOOLS_BOT_TOKEN }}
+      PRIVATE_WTOOLS_BOT_SSH_KEY : ${{ secrets.PRIVATE_WTOOLS_BOT_SSH_KEY }}
     steps :
-    - run : git config --global core.autocrlf input
-    - run : git config --global user.email "testing@testing.com"
-    - run : git config --global user.name "Testing"
+    - name : git config
+      run : |
+        git config --global core.autocrlf input
+        git config --global user.email "testing@testing.com"
+        git config --global user.name "Testing"
     - uses : actions/checkout@v2
     - name : ${{ matrix.node-version }}
       uses : actions/setup-node@v1
@@ -46,5 +51,3 @@ jobs :
     - run : npm list
     - name : npm test
       run : npm test
-      env :
-        WTOOLS_BOT_TOKEN : ${{ secrets.WTOOLS_BOT_TOKEN }}
