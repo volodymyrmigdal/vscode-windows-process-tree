@@ -7,7 +7,7 @@ submodule :
     criterion :
       development : 0
   node-pre-gyp :
-    path : npm:///node-pre-gyp#0.14.0
+    path : npm:///@mapbox/node-pre-gyp
     enabled : 0 # submodule
     criterion :
       development : 0
@@ -62,7 +62,7 @@ path :
   js : 'js'
   cpp : 'src'
   build : 'build'
-  node-pre-gyp : node_modules/node-pre-gyp/bin/node-pre-gyp
+  node-pre-gyp : node_modules/@mapbox/node-pre-gyp/bin/node-pre-gyp
 
   out.raw.debug :
     path : '{path::out}/debug'
