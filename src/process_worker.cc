@@ -7,7 +7,7 @@
 
 GetProcessesWorker::GetProcessesWorker(
     Nan::Callback* callback,
-    DWORD* process_data_flags) 
+    DWORD* process_data_flags)
       : AsyncWorker(callback),
         process_data_flags(process_data_flags) {
     process_info = new ProcessInfo[1024];
