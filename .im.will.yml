@@ -7,7 +7,7 @@ submodule :
     criterion :
       development : 0
   node-pre-gyp :
-    path : npm:///@mapbox/node-pre-gyp
+    path : npm:///@mapbox/node-pre-gyp#1.0.2
     enabled : 0 # submodule
     criterion :
       development : 0

@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "nan": "^2.13.2",
-    "@mapbox/node-pre-gyp": ""
+    "@mapbox/node-pre-gyp": "1.0.2"
   },
   "gypfile": false,
   "devDependencies": {
